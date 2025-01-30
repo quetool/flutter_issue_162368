@@ -99,7 +99,6 @@ class WebviewService {
         onPageFinished: (String url) async {
           print(url);
           await _runJavascript();
-          await _fitToScreen();
           Future.delayed(const Duration(seconds: 1), () {
             _webViewController.runJavaScript(
               'sendMessage({type: "@w3m-app/IS_CONNECTED"})',
@@ -130,19 +129,6 @@ class WebviewService {
 
   void _onFrameMessage(JavaScriptMessage jsMessage) async {
     print(jsMessage.message);
-  }
-
-  Future<void> _fitToScreen() async {
-    return await _webViewController.runJavaScript('''
-      if (document.querySelector('meta[name="viewport"]') === null) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-        document.head.appendChild(meta);
-      } else {
-        document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-      }
-    ''');
   }
 
   Future<void> _runJavascript() async {
